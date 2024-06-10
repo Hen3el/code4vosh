@@ -1,0 +1,11 @@
+<marquee bgcolor='#7373bb'>
+    <span style='color:#52cccc'><b>Поздравляем учеников, получивших высокие баллы!</b></span>
+    {% regroup codes by code.pupil as codes_list %}
+    {% for code in codes_list %}
+      <span style='color:#ff668d'> <b>
+        {% if code.grouper is None %} {{code.list}} {% else %} {{ code.grouper }} {% endif %}</b> </span>
+      {% for pupil in code.list %}
+        {{ pupil.subject }}: <b>{{ pupil.result }}</b> из <b>{{ pupil.max_result }}</b>{% if not forloop.last %},{% endif %}
+      {% endfor %}
+    {% endfor %}        
+</marquee>

@@ -1,0 +1,34 @@
+{% load static %}
+<header>
+  {% if codes %}
+  {% include 'includes/marquee.html' %}
+  {% endif %}
+  <nav class="navbar navbar-light" style="background-color: #6666ffc4">
+    <div class="container">
+      <a class="navbar-brand" href="{% url 'main_site:main' %}">
+        <img src='{%static 'img/logo_new.png' %}' width="30" height="30" class="d-inline-block align-top" alt=""> 
+      </a>
+      <h2> code<span style="color:red">4</span>vosh </h2>
+      {% with request.resolver_match.view_name as view_name %}
+          <ul class="nav nav-pills">
+            {% if request.user.is_authenticated %}
+            <li class="nav-item"> 
+              <a class="nav-link link-light {% if view_name  == 'main_site:lk' %}active{% endif %}" href="{% url 'main_site:lk' %}">Личный кабинет</a>
+            </li>
+            <li class="nav-item"> 
+              <a class="nav-link link-light {% if view_name  == 'users:logout' %}active{% endif %}" href="{% url 'users:logout' %}">Выйти</a>
+            </li>
+            {% else %}
+              <li class="nav-item"> 
+                <a class="nav-link link-light {% if view_name  == 'users:login' %}active{% endif %}" href="{% url 'users:login' %}">Войти</a>
+              </li>
+              <li class="nav-item"> 
+                <a class="nav-link link-light {% if view_name  == 'users:signup' %}active{% endif %}" href="{% url 'users:signup' %}">Регистрация</a>
+              </li>
+            {% endif %}
+          </ul>
+        {% endwith %}
+    </div>
+  </nav>
+      
+</header> 

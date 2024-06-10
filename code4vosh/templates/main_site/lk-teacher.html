@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% block header %}{% endblock %}
+{% block title %} Личный кабинет {{ user }} {% endblock %}
+{% block content %} 
+{% load static %}
+{% load user_filters %}
+<style>
+    [data-title] {position: relative}
+    [data-title]:after {
+	    content: attr(data-title);
+	    opacity: 0;
+	    visibility: hidden;
+	    z-index: 1000;
+	    position: absolute;
+	    top: 2em;
+	    left: 30%;
+	    padding: 2px 8px;
+	    font-size: 15px;
+	    font-weight: 400;
+	    white-space: nowrap;
+	    color: #444;
+	    background-image: -moz-linear-gradient(top, #fff, #ddd);
+	    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #fff), color-stop(1, #ddd));
+	    background-image: -webkit-linear-gradient(top, #fff, #ddd);
+	    background-image: -o-linear-gradient(top, #fff, #ddd);
+	    background-image: -ms-linear-gradient(top, #fff, #ddd);
+	    -moz-border-radius: 3px;
+	    -webkit-border-radius: 3px;
+	    -o-border-radius: 3px;
+	    -ms-border-radius: 3px;
+	    border-radius: 3px;
+	    -moz-box-shadow: 0 0 5px #ccc;
+	    -webkit-box-shadow: 0 0 5px #ccc;
+	    -o-box-shadow: 0 0 5px #ccc;
+	    -ms-box-shadow: 0 0 5px #ccc;
+	    box-shadow: 0 0 5px #ccc;
+    }
+    [data-title]:hover:after {
+    	opacity: 1;
+	    visibility: visible;
+	    -moz-transition: all 0.2s ease-out 0.5s;
+	    -webkit-transition: all 0.2s ease-out 0.5s;
+	    -o-transition: all 0.2s ease-out 0.5s;
+	    -ms-transition: all 0.2s ease-out 0.5s;
+	    transition: all 0.2s ease-out 0.5s;
+    }
+	#telemetry_table1 {
+		background: #52ccccde;
+		position:relative;
+		overflow:auto;
+	}
+	table {
+		font-size: 10px;
+		 /* Цвет фона таблицы */
+		border: 6px solid #000; /* Рамка вокруг таблицы */
+	   }
+	td, th {
+		padding: 5px; /* Поля вокруг текста */
+		border: 2px solid #6666ff; /* Рамка вокруг ячеек */
+	   }
+</style>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <ul id="TabMenu1">
+            <li><a href="#">Школьный этап</a></li>
+            <li><a href="#">Муниципальный этап</a></li>
+            <li><a href="#">Региональный этап</a></li>
+            </ul>
+			{% load cache %}
+			{% cache 300 table %}
+			<div id='telemetry_table1' class="card">
+				{{ data|as_table|safe }}
+			</div>
+			{% endcache %}
+    </div>
+</div>
+{% endblock %}      

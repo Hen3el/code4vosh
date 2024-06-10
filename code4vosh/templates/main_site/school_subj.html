@@ -1,0 +1,5 @@
+<form method="post" action="{% url 'main_site:main' %}">
+    {% csrf_token %}
+    {{ form.media }}
+
+    <script type="text/javascript" src="{% url 'main_site:jsi18n' %}"></script>

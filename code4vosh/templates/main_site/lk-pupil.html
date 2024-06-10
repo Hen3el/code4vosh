@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+{% block header %}{% endblock %}
+{% block title %} Личный кабинет {{ user }} {% endblock %}
+{% block content %} 
+{% load static %}
+{% load user_filters %}
+<style>
+    [data-title] {position: relative}
+    [data-title]:after {
+	    content: attr(data-title);
+	    opacity: 0;
+	    visibility: hidden;
+	    z-index: 1000;
+	    position: absolute;
+	    top: 2em;
+	    left: 30%;
+	    padding: 2px 8px;
+	    font-size: 15px;
+	    font-weight: 400;
+	    white-space: nowrap;
+	    color: #444;
+	    background-image: -moz-linear-gradient(top, #fff, #ddd);
+	    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #fff), color-stop(1, #ddd));
+	    background-image: -webkit-linear-gradient(top, #fff, #ddd);
+	    background-image: -o-linear-gradient(top, #fff, #ddd);
+	    background-image: -ms-linear-gradient(top, #fff, #ddd);
+	    -moz-border-radius: 3px;
+	    -webkit-border-radius: 3px;
+	    -o-border-radius: 3px;
+	    -ms-border-radius: 3px;
+	    border-radius: 3px;
+	    -moz-box-shadow: 0 0 5px #ccc;
+	    -webkit-box-shadow: 0 0 5px #ccc;
+	    -o-box-shadow: 0 0 5px #ccc;
+	    -ms-box-shadow: 0 0 5px #ccc;
+	    box-shadow: 0 0 5px #ccc;
+    }
+    [data-title]:hover:after {
+    	opacity: 1;
+	    visibility: visible;
+	    -moz-transition: all 0.2s ease-out 0.5s;
+	    -webkit-transition: all 0.2s ease-out 0.5s;
+	    -o-transition: all 0.2s ease-out 0.5s;
+	    -ms-transition: all 0.2s ease-out 0.5s;
+	    transition: all 0.2s ease-out 0.5s;
+    }
+    #telemetry_table1 {
+		position:relative;
+		overflow:auto;
+	}
+</style>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <ul id="TabMenu1">
+            <li><a href="#">Школьный этап</a></li>
+            <li><a href="#">Муниципальный этап</a></li>
+            <li><a href="#">Региональный этап</a></li>
+            </ul>
+        <div id='telemetry_table1' class="card">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr align="center">
+                        <th colspan="1">Предмет</th>
+                        <th colspan="1">Код</th>
+                        <th colspan="2">Даты проведения</th>
+                        <th colspan="1">Результаты ожидаются</th>
+                        <th colspan="1">Результат</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if not issued_codes %}
+                        <tr>
+                            <td> 
+                                <form method="post" action="{% url 'main_site:lk' %}">
+                                {% csrf_token %}
+                                {% for field in form %}
+                                    {{ field|addclass:'form-control' }}
+                                {% endfor %}
+                            </td>
+                            <td>
+                                <button type="submit" class="btn btn-primary">
+                                    Получить код
+                                </button>
+                            </td>
+                                </form>
+                        </tr>
+                    {% else %}
+                        {% for iss_code in issued_codes %}
+                            <tr align="center">
+                                <td nowrap> {{ iss_code.subj }} </td>
+                                <td nowrap> 
+                                    <a id='{{ forloop.counter }}'> {{ iss_code.code }} </a> 
+                                    <a data-title='Скопировать код и перейти на сайт олимпиады'><img onclick="copyToClipboard('#{{ forloop.counter }}'); window.open('https://online.olimpiada.ru/','_blank')" src={% static 'img/Copy_button.png' %} height='16' width='16'></a> </td> 
+                                <td nowrap> с {{ iss_code.date_start }} </td>
+                                <td nowrap> по {{ iss_code.date_end }} </td>
+                                <td nowrap> {{ iss_code.subj.result_date }} </td>
+                                <td nowrap> {% if iss_code.max_result %}
+                                    {{ iss_code.result }} из {{iss_code.max_result}} 
+                                    {% else %} {{ iss_code.result }} {% endif %}</td>
+                            </tr>
+                        {% endfor %}
+                        <td colspan="2"> 
+                            <form method="post" action="{% url 'main_site:lk' %}">
+                                {% csrf_token %}
+                                {% for field in form %}
+                                    {{ field|addclass:'form-control' }}
+                                {% endfor %}
+                        </td>
+                        <td>
+                                <button type="submit" class="btn btn-primary">
+                                    Получить код
+                                </button>
+                            </form>
+                        </td>
+                        <td colspan='3'>
+                            {% if code_not_found %}
+                        <div class='card' style='background-color:#ff668dbd'>
+                        {{ code_not_found }}
+                        </div>
+                        {% endif %}
+                        </td>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script>
+    function copyToClipboard(element) {
+        var $temp = $("<input>");
+        $("body").append($temp);
+        $temp.val($(element).text()).select();  
+        document.execCommand("copy");
+        $temp.remove();
+      }
+</script>
+
+{% endblock %}      
